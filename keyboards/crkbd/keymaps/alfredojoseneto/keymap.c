@@ -1,0 +1,107 @@
+/*
+Copyright 2019 @foostan
+Copyright 2020 Drashna Jaelre <@drashna>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See he
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+#include QMK_KEYBOARD_H
+#include "quantum/keymap_extras/keymap_brazilian_abnt2.h"
+#include "quantum/keymap_extras/sendstring_brazilian_abnt2.h"
+
+
+enum custom_keycodes {
+  VIM_SEL = SAFE_RANGE,
+  SFT_ENT,
+};
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  // static uint16_t internal_timer;
+
+  switch (keycode) {
+
+    case VIM_SEL:
+      if (record->event.pressed) {
+        // when keycode is pressed
+        SEND_STRING(SS_TAP(X_ESC));
+        SEND_STRING("vap");
+        return false;
+      }
+      break;
+
+    case SFT_ENT:
+      if (record->event.pressed) {
+        SEND_STRING(SS_DOWN(X_LSFT) SS_TAP(X_ENT) SS_UP(X_LSFT) SS_TAP(X_ESC));
+        return false;
+      }
+      break;
+
+      return false;
+
+  }
+
+    return true;
+  };
+
+
+const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+  [0] = LAYOUT_split_3x6_3(
+  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
+       KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,  KC_BSPC,
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+       KC_ESC,   HR_GA,   HR_AS,   HR_CD,   HR_SF,    KC_G,                         KC_H,   HR_SJ,   HR_CK,   HR_AL,HR_GSCLN,  KC_ESC,
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+       KC_DEL,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH,  KC_DEL,
+  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
+                                          KC_CAPS,   MO(1),  KC_ENT,     KC_SPC,   MO(2),   MO(3)
+                                      //`--------------------------'  `--------------------------'
+
+  ),
+
+  [1] = LAYOUT_split_3x6_3(
+  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
+      _______,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                         KC_6,    KC_7,    KC_8,    KC_9,    KC_0, _______,
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      _______, GUI_TAB,DSK_LEFT, ALT_TAB,DSK_RGHT, VIM_SEL,                      KC_LEFT, KC_DOWN,   KC_UP,KC_RIGHT,  KC_INS, _______,
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, SFT_ENT,                      KC_HOME, KC_PGDN, KC_PGUP,  KC_END, KC_PSCR, _______,
+  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
+                                          _______, _______,  KC_ENT,     KC_SPC, _______, _______
+                                      //`--------------------------'  `--------------------------'
+  ),
+
+  [2] = LAYOUT_split_3x6_3(
+  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
+      _______, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_LPRN,                      KC_RPRN, KC_AMPR, KC_ASTR, BR_QUES, KC_LCBR, _______,
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      _______, BR_PERC, BR_BSLS, KC_MINS, KC_UNDS, KC_RBRC,                      KC_BSLS,  KC_EQL, BR_DQUO, BR_SLSH, BR_CIRC, _______,
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      _______, BR_LABK, BR_PIPE, BR_TILD, KC_LBRC, KC_RCBR,                      KC_PIPE, KC_PLUS, BR_QUOT, BR_COLN, BR_RABK, _______,
+  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
+                                          _______, _______,  KC_ENT,     KC_SPC, _______, _______
+                                      //`--------------------------'  `--------------------------'
+  ),
+
+  [3] = LAYOUT_split_3x6_3(
+  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
+        KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,                        KC_F7,   KC_F8,   KC_F9,  KC_F10,  KC_F11,  KC_F12,
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      XXXXXXX, RGB_TOG, RGB_HUI, RGB_SAI, RGB_VAI, XXXXXXX,                      XXXXXXX, KC_VOLU, KC_BRIU, XXXXXXX, XXXXXXX, XXXXXXX,
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      XXXXXXX, XXXXXXX, RGB_HUD, RGB_SAD, RGB_VAD, XXXXXXX,                      KC_MUTE, KC_VOLD, KC_BRID, XXXXXXX, XXXXXXX, XXXXXXX,
+  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
+                                          _______, _______,  KC_ENT,     KC_SPC, _______, _______
+                                      //`--------------------------'  `--------------------------'
+  ),
+
+};
